@@ -33,7 +33,7 @@ class ThreadPool(object):
             callback(success, result)
             success:任务是否成功运行
             result:任务完成的返回值
-        pool.put(func, args((),{}), callback)
+        pool.put(func, args([],{}), callback)
     等待所有任务完成
     pool.wait()
     结束线程池
@@ -151,6 +151,10 @@ class ThreadPool(object):
         #将新任务加入队列
         self._task_queue.put((func, args, callback))
 
+    def getTaskNum(self):
+        #获取剩余任务数量
+        return self._task_queue.qsize()
+
     def wait(self):
         """
         阻塞直到线程池中所有线程都空闲，即任务全部处理完毕，任务队列为空
@@ -202,28 +206,30 @@ class ThreadPool(object):
     
 if __name__ == '__main__':
     lock = threading.Lock()
-    count = 0
-    def call(arg):
-        global count
+    def task(arg):
         lock.acquire()
-        print(count, end = ' ')
-        count = count + 1
+        print('start task ', end = '')
         print(arg)
         lock.release()
         time.sleep(random.randint(0,5))
+        print('end task ', end = '')
+        print(arg)
         return arg
 
     def callback(flag, arg):
-        print(' callback' + str(arg))
+        lock.acquire()
+        print('callback for task ' + str(arg))
+        lock.release()
 
     pool = ThreadPool(4)
     for i in range(10):
-        pool.put(call, [[i],{}], callback)
+        pool.put(task, ([i],{}), callback)
     print('put finished')
+    print('remain task is ', end = '')
+    print(pool.getTaskNum())
     pool.wait()
     print('start terminal')
     pool.terminal(False)
     print('end terminal')
         
-
 

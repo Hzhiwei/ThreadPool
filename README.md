@@ -16,7 +16,7 @@ args[0]:任务的list参数
         success:任务是否成功运行
         result:任务完成的返回值
 '''
-    pool.put(func, args((),{}), callback)
+    pool.put(func, args([],{}), callback)
 #等待所有任务完成
 pool.wait()
 
@@ -26,4 +26,39 @@ pool.wait()
 #结束线程池
 pool.terminal()
 ```
+**getTaskNum()**
+
+获取任务队列剩余任务数量
+
+**put(func, args([],{}), callback)**
+
+向任务队列中增加任务
+
+***func***:任务函数
+
+***args[0]***:任务的list参数
+
+    args[1]:任务的dict参数
+
+    callback:任务函数运行完成后的回调函数
+
+        callback(success, result)
+
+        success:任务是否成功运行
+
+        result:任务完成的返回值
+
+**wait()**
+
+阻塞等待任务队列中的任务全部完成
+
+**terminal(arg)**
+
+结束线程池。线程池中正在线程里运行的任务会继续运行，运行结束后不再从任务队列中获取任务，而是直接结束线程。
+
+***arg***：
+
+True：阻塞直到所有线程里的任务结束才返回
+
+False：直接返回，各个线程继续运行正在运行的任务，任务结束后自行结束线程。
 
