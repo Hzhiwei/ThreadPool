@@ -13,10 +13,10 @@ for i in range(m):
 func:任务函数
 args[0]:任务的list参数
     args[1]:任务的dict参数
-    callback:任务函数运行完成后的回调函数
-        callback(success, result)
-        success:任务是否成功运行
-        result:任务完成的返回值
+callback:任务函数运行完成后的回调函数
+    callback(success, result)
+    success:任务是否成功运行
+    result:任务完成的返回值
 '''
     pool.put(func, args([],{}), callback)
 #等待所有任务完成
